@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator='template11'>
+<head>
+<meta charset="utf-8" />
+<title>Saisie d'un produit</title>
+<link rel="stylesheet" type="text/css"
+	href="/webjars/bootstrap/4.1.0/css/bootstrap.min.css" />
+</head>
+<body>
+<div layout:fragment="pageContent">
+	<div class="col-md-6 col-sm-6 col-xs-12">
+		<form th:action="saveProduit" method="post">
+			<div th:object="${produit}">
+			<div class="form-group">
+					<label class="control-label">Id:</label> <input
+						class="form-control" type="text" name="idProuit"
+						th:value="*{idProduit}" /> 
+				</div>
+				<div class="form-group">
+					<label class="control-label">Désignation:</label> <input
+						class="form-control" type="text" name="designation"
+						th:value="*{designation}" /> <span class="error"
+						th:errors="*{designation}"></span>
+				</div>
+				<div class="form-group">
+					<label class="control-label">Prix:</label> <input
+						class="form-control" type="text" name="prix" th:value="*{prix}" />
+					<span class="error" th:errors="*{prix}"></span>
+				</div>
+				<div class="form-group">
+					<label class="control-label">Quantité:</label> <input
+						class="form-control" type="text" name="prix" th:value="*{quantite}" />
+					<span class="error" th:errors="*{quantite}"></span>
+				</div>
+				<div class="form-group">
+					<label class="control-label">Date Expiration:</label> <input
+						class="form-control" type="date" name="dateEnregistrement" th:value="*{dateEnregistrement}" />
+					<span class="error" th:errors="*{dateEnregistrement}"></span>
+				</div>
+				<div class="form-group">
+				
+					<label class="control-label">Disponibilité :</label> 
+					<input type="checkbox" name="disponibilite" th:checked="*{disponibilite}" />
+					
+					<span class="error" th:errors="*{disponibilite}"></span>
+				</div>
+				
+				<div>
+					<input class="btn btn-primary" type="submit" value="Enregitrer" />
+				</div>
+			</div>
+		</form>
+	</div>
+	</div>
+</body>
+</html>

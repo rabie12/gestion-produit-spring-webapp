@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8" />
+<title>Saisie d'un produit</title>
+<link rel="stylesheet" type="text/css"
+	href="/webjars/bootstrap/4.1.0/css/bootstrap.min.css"
+	 />
+</head>
+<body>
+	<div class="col-md-6 col-sm-6 col-xs-12">
+		<div class="panel panel-info spacer">
+			<div class="panel-heading">Confirmation</div>
+			<div class="panel-body">
+				<div class="form-group">
+					<label class="control-label">ID:</label> <label
+						class="control-label" th:text="${produit.idProduit}"></label>
+				</div>
+				<div class="form-group">
+					<label class="control-label">Désignation:</label> <label
+						class="control-label" th:text="${produit.designation}"></label>
+				</div>
+				<div class="form-group">
+					<label class="control-label">Prix:</label> <label
+						class="control-label" th:text="${produit.prix}"></label>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

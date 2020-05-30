@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" type="text/css"
+	href="/webjars/bootstrap/4.1.0/css/bootstrap.min.css" />
+<script src="/webjars/jquery/3.4.1/jquery.min.js"></script>
+<script src="/webjars/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+</head>
+<body>
+	<nav class="navbar navbar-expand-sm bg-success navbar-dark">
+		<ul class="navbar-nav">
+			<li class="nav-item active"><a class="nav-link" href="/produit">Produit</a>
+			</li>
+			<li sec:authorize="hasRole('ROLE_ADMIN')" class="nav-item"><a class="nav-link" href="/formProduit">Ajouter
+					un produit</a></li>
+			<li class="nav-item"><a class="nav-link" href="/produit">Chercher Produit</a></li>
+			</ul>
+			 <ul class="navbar-nav ml-auto">
+				<li class="nav-item dropdown mr-15"><a
+					class="nav-link dropdown-toggle" data-toggle="dropdown"
+					id="navbar-drop" href="#"> <span sec:authentication="name"></span>
+				</a>
+
+					<div class="dropdown-menu">
+						<a sec:authorize="isAuthenticated()" class="dropdown-item" th:href="@{logout}">Logout</a>
+						<a sec:authorize="isAnonymous()"class="dropdown-item" href="@{logout}">Login</a>
+						<a sec:authorize="isAuthenticated()" class="dropdown-item" th:href="@{logout}">Profil</a>
+					</div></li>
+			</ul>
+		
+	</nav>
+	<section layout:fragment="pageContent"></section>
+</body>
+</html>
