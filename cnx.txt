@@ -1,0 +1,94 @@
+Tu peux envoyer les tokens à la fois dans le header et dans le body pour offrir plus de flexibilité au front-end.
+
+📌 Bonne Pratique :
+	1.	Access Token dans le Header → Permet au front de l’utiliser directement pour les requêtes sécurisées.
+	•	Header: Authorization: Bearer <accessToken>
+	2.	Refresh Token dans un Header Séparé → Évite qu’il soit exposé dans le body.
+	•	Header: X-Refresh-Token: <refreshToken>
+	3.	Les deux tokens dans le Body aussi → Utile pour les clients mobiles ou les front-ends qui ne gèrent pas bien les headers.
+
+🚀 Implémentation dans ton contrôleur d’authentification
+
+Dans Spring Boot, renvoie les tokens dans les deux pour que le front puisse choisir.
+
+@PostMapping("/login")
+public ResponseEntity<?> login(@RequestBody AuthRequest authRequest) {
+    try {
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(authRequest.username(), authRequest.password()));
+
+        UserDetails user = userDetailsService.loadUserByUsername(authRequest.username());
+
+        String accessToken = jwtUtil.generateAccessToken(user.getUsername());
+        String refreshToken = jwtUtil.generateRefreshToken(user.getUsername());
+
+        // Ajout des tokens dans les headers
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + accessToken);
+        headers.set("X-Refresh-Token", refreshToken);
+
+        // Envoi des tokens aussi dans le body
+        return ResponseEntity.ok()
+                .headers(headers)
+                .body(Map.of(
+                        "accessToken", accessToken,
+                        "refreshToken", refreshToken,
+                        "message", "Authentification réussie"
+                ));
+
+    } catch (BadCredentialsException e) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(Map.of("error", "Nom d'utilisateur ou mot de passe incorrect"));
+    }
+}
+
+🚀 Implémentation Front-End (React)
+
+1️⃣ Récupération depuis le Header
+
+Si tu veux que Axios récupère les tokens depuis le header :
+
+const login = async (username, password) => {
+    try {
+        const response = await api.post('/auth/login', { username, password });
+
+        // Récupération des tokens depuis les headers
+        const accessToken = response.headers["authorization"]?.split("Bearer ")[1];
+        const refreshToken = response.headers["x-refresh-token"];
+
+        if (accessToken && refreshToken) {
+            localStorage.setItem("accessToken", accessToken);
+            localStorage.setItem("refreshToken", refreshToken);
+            console.log("Connexion réussie !");
+        }
+    } catch (err) {
+        console.error("Erreur de connexion", err.response?.data?.error);
+    }
+};
+
+2️⃣ Récupération depuis le Body
+
+Si ton front-end préfère utiliser le body, il suffit d’adapter le code :
+
+const login = async (username, password) => {
+    try {
+        const response = await api.post('/auth/login', { username, password });
+
+        // Récupération depuis le body
+        localStorage.setItem("accessToken", response.data.accessToken);
+        localStorage.setItem("refreshToken", response.data.refreshToken);
+        
+        console.log("Connexion réussie !");
+    } catch (err) {
+        console.error("Erreur de connexion", err.response?.data?.error);
+    }
+};
+
+📌 Conclusion
+
+🔹 Meilleure option : Header pour plus de sécurité.
+🔹 Alternative : Body si ton front-end a des contraintes techniques.
+🔹 Les deux ensemble offrent le choix au front-end.
+
+→ Si ton front React utilise Axios, il est plus simple de récupérer les tokens via les headers.
+Tu veux que je te fasse un middleware Axios qui gère automatiquement l’ajout du token aux requêtes suivantes ?
